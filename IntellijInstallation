@@ -1,0 +1,27 @@
+
+Download jdk file from this url
+
+http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+
+
+INSTALLING INTELLIJ
+----------------------
+
+Download Intellij for Linux from the jetbrains website. You can download this with your browser:
+
+https://www.jetbrains.com/idea/download/download-thanks.html?platform=linux&code=IIC
+
+
+copy tar file to /opt/directory
+
+chown -R root:root /opt/rea*
+
+ln -s /opt/idea-IC-163.10154.41/bin/idea.sh /usr/local/bin/idea.sh
+
+ idea.sh
+
+
+Note: Version Intellij 15 shows error message: “IBus prior to 1.5.11 may cause input problems. See IDEA-78860 for details.” It doesn’t seem to cause me any problems.  You can click the link: “Do not show again.”
+
+
+
