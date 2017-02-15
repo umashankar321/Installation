@@ -82,7 +82,7 @@ Before building Nagios Plugins, we must configure it. Use this command:
 
 Now compile Nagios Plugins with this command:
 
-make
+l
 
 Then install it with this command:
 
@@ -96,7 +96,6 @@ Install NRPE
 
 wget http://downloads.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz
 
-
 tar -zxf nrpe-2.15.tar.gz
 
 cd nrpe-2.15.
@@ -104,7 +103,7 @@ cd nrpe-2.15.
 Configure NRPE with these commands:
 -----------------------------------
 
-./configure --enable-command-args --with-nagios-user=nagios --with-nagios-group=nagios --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu
+./configure --enable-command-args --with-nagios-user=nagios --with-nagios-group=nagcmd --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu
 
 Now build and install NRPE and its xinetd startup script with these commands:
 -------------------------------------------------------------------------------
