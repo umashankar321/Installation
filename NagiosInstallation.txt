@@ -5,14 +5,14 @@ Installing Nagios server in centos 7
 
 yum install php
 
-#yum install httpd*
+yum install httpd*
 
 This section will cover how to install Nagios 4 on your monitoring server. You only need to complete this section once.
 
 Install Build Dependencies
 --------------------------
 
-sudo yum install gcc glibc glibc-common gd gd-devel make net-snmp openssl-devel xinetd unzip
+yum install gcc glibc glibc-common gd gd-devel make net-snmp openssl-devel xinetd unzip
 
 Create Nagios User and Group
 ----------------------------
@@ -29,17 +29,9 @@ Install Nagios Core
 
 Extract the Nagios archive with this command:
 
-#tar xvf nagios-4.1.1.tar.gz
+#tar xzf nagios-4.1.1.tar.gz
 
 cd nagios-4.1.1.
-
-
-Monitor a CentOS 7 Host with NRPE
-=================================
-
-how to add a new host to Nagios, so it will be monitored.
-
-
 
 
 Before building Nagios, we must configure it with this command:
