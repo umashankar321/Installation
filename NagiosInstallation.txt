@@ -1,0 +1,351 @@
+
+Installing Nagios server in centos 7
+---------------------------------------
+
+
+yum install php
+
+#yum install httpd*
+
+This section will cover how to install Nagios 4 on your monitoring server. You only need to complete this section once.
+
+Install Build Dependencies
+--------------------------
+
+sudo yum install gcc glibc glibc-common gd gd-devel make net-snmp openssl-devel xinetd unzip
+
+Create Nagios User and Group
+----------------------------
+
+useradd nagios
+groupadd nagcmd
+usermod -a -G nagcmd nagios
+
+
+Install Nagios Core
+-------------------
+
+# wget https://assets.nagios.com/downloads/nagioscore/releases/nagios-4.1.1.tar.gz
+
+Extract the Nagios archive with this command:
+
+#tar xvf nagios-4.1.1.tar.gz
+
+cd nagios-4.1.1.
+
+
+Monitor a CentOS 7 Host with NRPE
+=================================
+
+how to add a new host to Nagios, so it will be monitored.
+
+
+
+
+Before building Nagios, we must configure it with this command:
+--------------------------------------------------------
+
+./configure --with-command-group=nagcmd 
+
+Now compile Nagios with this command:
+
+make all
+
+Now we can run these make commands to install Nagios, init scripts, and sample configuration files:
+--------------------------------------------------------------------------------------------
+
+make install
+
+make install-commandmode
+
+make install-init
+
+make install-config
+
+make install-webconf
+
+In order to issue external commands via the web interface to Nagios, we must add the web server user, apache, to the nagcmd group:
+------------------------------------------------------------------------------------------
+
+ usermod -G nagcmd apache
+
+
+Install Nagios Plugins
+=======================
+
+ latest version is Nagios Plugins 2.1.1. Download it to your home directory
+
+# wget http://nagios-plugins.org/download/nagios-plugins-2.1.1.tar.gz
+
+Extract Nagios Plugins archive with this command:
+
+tar -zxf nagios-plugins-2.1.1.tar.gz
+
+cd nagios-plugins-2.1.1/
+
+Before building Nagios Plugins, we must configure it. Use this command:
+-----------------------------------------------------------------------
+
+./configure --with-nagios-user=nagios --with-nagios-group=nagios --with-openssl
+
+Now compile Nagios Plugins with this command:
+
+make
+
+Then install it with this command:
+
+ make install
+
+
+Install NRPE
+=============
+
+ latest release is 2.15. Download it to your home directory
+
+wget http://downloads.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz
+
+
+tar -zxf nrpe-2.15.tar.gz
+
+cd nrpe-2.15.
+
+Configure NRPE with these commands:
+-----------------------------------
+
+./configure --enable-command-args --with-nagios-user=nagios --with-nagios-group=nagios --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu
+
+Now build and install NRPE and its xinetd startup script with these commands:
+-------------------------------------------------------------------------------
+
+make all
+
+make install
+
+make install-xinetd
+
+make install-daemon-config
+
+
+Open the xinetd startup script in an editor:
+--------------------------------------------
+
+vi /etc/xinetd.d/nrpe
+
+Modify the only_from line by adding the private IP address of the your Nagios server to the end (substitute in the actual IP address of your server)
+
+ only_from       = 127.0.0.1 16.184.47.43
+
+Save and exit. Only the Nagios server will be allowed to communicate with NRPE.
+
+Restart the xinetd service to start NRPE:
+------------------------------------------
+
+service xinetd restart
+
+
+
+Now that Nagios 4 is installed, we need to configure it.
+=========================================================
+
+Configure Nagios
+=================
+
+
+Open the main Nagios configuration file
+
+vi /usr/local/nagios/etc/nagios.cfg
+
+Now find an uncomment this line by deleting the #:
+
+cfg_dir=/usr/local/nagios/etc/servers
+
+Save and exit.
+
+
+Now create the directory that will store the configuration file for each server that you will monitor
+
+mkdir /usr/local/nagios/etc/servers
+
+
+Configure Nagios Contacts
+-------------------------
+
+Open the Nagios contacts configuration
+
+vi /usr/local/nagios/etc/objects/contacts.cfg
+
+Find the email directive, and replace its value (the highlighted part) with your own email address:
+
+save and exit;
+
+
+Configure check_nrpe Command
+----------------------------
+Let's add a new command to our Nagios configuration:
+
+ vi /usr/local/nagios/etc/objects/commands.cfg
+
+Add the following to the end of the file:
+
+define command{
+        command_name check_nrpe
+        command_line $USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$
+}
+
+
+Save and exit. This allows you to use the check_nrpe command in your Nagios service definitions.
+
+
+Configure Apache
+----------------
+
+Use htpasswd to create an admin user, called "nagiosadmin", that can access the Nagios web interface:
+
+
+htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+
+Enter a password at the prompt. Remember this login, as you will need it to access the Nagios web interface.
+
+
+Nagios is ready to be started. Let's do that, and restart Apache:
+------------------------------------------------------------------
+
+ service nagios start
+
+ service httpd restart
+
+To enable Nagios to start on server boot, run this command:
+
+chkconfig nagios on
+
+
+
+
+Accessing the Nagios Web Interface
+===================================
+
+
+Open your web browser, and go to your Nagios server
+
+http://16.184.47.43/nagios
+
+
+
+IN CLIENT
+===========
+
+
+
+Monitoring  a  Host with NRPE
+==============================
+
+ how to add a new host to Nagios, so it will be monitored
+
+On a server that you want to monitor, install the EPEL repository:
+
+
+yum install epel-release
+
+
+Now install Nagios Plugins and NRPE
+------------------------------------
+
+yum install nrpe nagios-plugins-all
+
+
+update the NRPE configuration file.
+----------------------------------
+
+vi /etc/nagios/nrpe.cfg
+
+
+Find the allowed_hosts directive, and add the private IP address of your Nagios server
+
+allowed_hosts=127.0.0.1,16.184.47.43
+
+Save and exit. This configures NRPE to accept requests from your Nagios server.
+
+Restart NRPE to put the change into effect:
+-------------------------------------------
+
+service  nrpe start
+
+systemctl enable nrpe.service
+
+
+Once you are done installing and configuring NRPE on the hosts that you want to monitor, you will have to add these hosts to your Nagios server configuration before it will start monitoring them.
+
+
+
+IN NAGIOS SERVER
+===================
+
+
+Add Host to Nagios Configuration
+=================================
+
+On your Nagios server, create a new configuration file for each of the remote hosts that you want to monitor in /usr/local/nagios/etc/servers/
+
+
+vim /usr/local/nagios/etc/servers/node5.cfg
+
+Add the following to the file 
+
+
+define host {
+        use                             linux-server
+        host_name                        mca4.psdgc.cloud
+        alias                          node 5
+        address                         16.184.40.5
+        max_check_attempts              5
+        check_period                    24x7
+        notification_interval           30
+        notification_period             24x7
+}
+
+With the configuration file above, Nagios will only monitor if the host is up or down.
+
+
+Add the following service which need to be monitored ,
+
+define service {
+        use                             generic-service
+        host_name                       mca4.psdgc.cloud
+        service_description             PING
+        check_command                   check_ping!100.0,20%!500.0,60%
+}
+
+
+define service {
+        use                             generic-service
+        host_name                       mca4.psdgc.cloud
+        service_description             SSH
+        check_command                   check_ssh
+        notifications_enabled           0
+}
+
+
+Now save and quit
+
+Check whether the configuration file is OK or not using the command
+
+
+/usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+
+
+Once you are done configuring Nagios to monitor all of your remote hosts, you should be set. Be sure to access your Nagios web interface, and check out the Services page to see all of your monitored hosts and services:
+
+
+
+
+NOTE:
+======
+
+default samples of services will in /usr/local/nagios/etc/objects/localhost.cfg
+
+
+
+Thank you...........
+
+
+
