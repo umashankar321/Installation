@@ -67,18 +67,18 @@ Install Nagios Plugins
 
  latest version is Nagios Plugins 2.1.1. Download it to your home directory
 
-# wget http://nagios-plugins.org/download/nagios-plugins-2.1.1.tar.gz
+# wget http://nagios-plugins.org/download/nagios-plugins-2.2.0.tar.gz
 
 Extract Nagios Plugins archive with this command:
 
-tar -zxf nagios-plugins-2.1.1.tar.gz
+tar -zxf nagios-plugins-2.2.0tar.gz
 
-cd nagios-plugins-2.1.1/
+cd nagios-plugins-2.2.0/
 
 Before building Nagios Plugins, we must configure it. Use this command:
 -----------------------------------------------------------------------
 
-./configure --with-nagios-user=nagios --with-nagios-group=nagios --with-openssl
+./configure --with-nagios-user=nagios --with-nagios-group=nagcmd --with-openssl
 
 Now compile Nagios Plugins with this command:
 
