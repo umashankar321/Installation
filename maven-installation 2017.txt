@@ -1,0 +1,50 @@
+Install apache-maven
+-------------------------------------------------------------------------------------------------------------------------------------
+Prerequisutes: Java should be installed
+   Step1:
+	#mkdir /opt/software/maven 
+	#cd /opt/software/maven
+Download apache-maven-3.3.9-bin.tar.gz
+        #wget http://www.eu.apache.org/dist/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+	#tar -zxvf  apache-maven-3.3.9-bin.tar.gz
+	#useradd maven
+	#passwd maven (maven)
+	#cd /opt/software
+	#chown -R maven:maven maven 
+   Step2:
+>>Add the following lines to vi ~/.bashrc 
+	export M2_HOME=/opt/software/maven/apache-maven-3.3.9
+	export M2=$M2_HOME/bin
+	export PATH=$M2:$PATH
+
+	save n quit
+
+	#source .bashrc
+	
+   Step3:
+>>check maven is installed
+	>>su - maven
+	>>mvn -version
+	
+		Apache Maven 3.0.5
+		Maven home: /usr/share/maven
+		Java version: 1.7.0_55, vendor: Oracle Corporation
+		Java home: /usr/lib/jvm/java-7-openjdk-amd64/jre
+		Default locale: en_US, platform encoding: UTF-8
+		OS name: "linux", version: "3.13.0-33-generic", arch: "amd64", family: "unix"
+
+
+Create a Project from Maven Template:
+#    mvn archetype:generate
+
+# mvn archetype:generate -DgroupId=com.hpe.test -DartifactId=test -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+# mvn validate
+# mvn compile
+# mvn test
+# mvn package
+# mvn install
+
+
+#java -cp target/test-1.0-SNAPSHOT.jar   com.hpe.test.App
+#mvn test
+#mvn test-compile
