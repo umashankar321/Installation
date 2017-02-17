@@ -5,14 +5,14 @@ Installing Nagios server in centos 7
 
 yum install php
 
-#yum install httpd*
+yum install httpd*
 
 This section will cover how to install Nagios 4 on your monitoring server. You only need to complete this section once.
 
 Install Build Dependencies
 --------------------------
 
-sudo yum install gcc glibc glibc-common gd gd-devel make net-snmp openssl-devel xinetd unzip
+yum install gcc glibc glibc-common gd gd-devel make net-snmp openssl-devel xinetd unzip
 
 Create Nagios User and Group
 ----------------------------
@@ -29,17 +29,9 @@ Install Nagios Core
 
 Extract the Nagios archive with this command:
 
-#tar xvf nagios-4.1.1.tar.gz
+#tar xzf nagios-4.1.1.tar.gz
 
 cd nagios-4.1.1.
-
-
-Monitor a CentOS 7 Host with NRPE
-=================================
-
-how to add a new host to Nagios, so it will be monitored.
-
-
 
 
 Before building Nagios, we must configure it with this command:
@@ -75,22 +67,22 @@ Install Nagios Plugins
 
  latest version is Nagios Plugins 2.1.1. Download it to your home directory
 
-# wget http://nagios-plugins.org/download/nagios-plugins-2.1.1.tar.gz
+# wget http://nagios-plugins.org/download/nagios-plugins-2.2.0.tar.gz
 
 Extract Nagios Plugins archive with this command:
 
-tar -zxf nagios-plugins-2.1.1.tar.gz
+tar -zxf nagios-plugins-2.2.0tar.gz
 
-cd nagios-plugins-2.1.1/
+cd nagios-plugins-2.2.0/
 
 Before building Nagios Plugins, we must configure it. Use this command:
 -----------------------------------------------------------------------
 
-./configure --with-nagios-user=nagios --with-nagios-group=nagios --with-openssl
+./configure --with-nagios-user=nagios --with-nagios-group=nagcmd --with-openssl
 
 Now compile Nagios Plugins with this command:
 
-make
+l
 
 Then install it with this command:
 
@@ -104,7 +96,6 @@ Install NRPE
 
 wget http://downloads.sourceforge.net/project/nagios/nrpe-2.x/nrpe-2.15/nrpe-2.15.tar.gz
 
-
 tar -zxf nrpe-2.15.tar.gz
 
 cd nrpe-2.15.
@@ -112,7 +103,7 @@ cd nrpe-2.15.
 Configure NRPE with these commands:
 -----------------------------------
 
-./configure --enable-command-args --with-nagios-user=nagios --with-nagios-group=nagios --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu
+./configure --enable-command-args --with-nagios-user=nagios --with-nagios-group=nagcmd --with-ssl=/usr/bin/openssl --with-ssl-lib=/usr/lib/x86_64-linux-gnu
 
 Now build and install NRPE and its xinetd startup script with these commands:
 -------------------------------------------------------------------------------
